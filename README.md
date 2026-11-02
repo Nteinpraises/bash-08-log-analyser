@@ -1,10 +1,10 @@
 # Log Analyser
 
-This is a Bash script that turns a raw web server access log into a short report a manager can read in one minute.
+This Bash script that turns a raw web server access log into a short report a manager can read in one minute.
 
 ## Problem Statement
 
-A busy website writes thousands of lines to its access log every day. When
+A busy site writes thousands of lines to its access log every day. When
 the site is slow or a page disappears, the answer is somewhere in those
 lines, but nobody has time to read them all. `loganalyse.sh` reads the log
 and prints the numbers that matter: how many requests came in, who sent
