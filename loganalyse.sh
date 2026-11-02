@@ -25,3 +25,5 @@ s5=(awk '$9 ~ /^5/ { n++ } END { print n_0 }' "$logfile")
 
 
 awk '{ print $7 }' "$logfile" | sort | uniq -c | sort -rn | head -5
+
+mb=$(awk '{ sum += $10} END { printf "%.1f", sum / 1048576 }' "$logfile")
