@@ -12,18 +12,61 @@ if [[ ! -f "$logfile" || ! -r "$logfile" ]]; then
     exit 1
 fi
 
-total=$(wc -l < "$logfile")
-unique=$(awk '{ print $1 }' "$logfile" | sort -u | wc -l)
+if [[ ! -f "$logfile" || ! -r "$logfile" ]]; then
+    echo "No data: '$logfile' is empty"
+    exit 0
+fi
 
-echo "Total requests: $total"
-echo "Unique visitors: $unique"
+print_header() {
+    echo "======================="
+    echo "log report: $logfile"
+    echo "======================="
+}
 
-s2=(awk '$9 ~ /^2/ { n++ } END { print n_0 }' "$logfile")
-s3=(awk '$9 ~ /^3/ { n++ } END { print n_0 }' "$logfile")
-s4=(awk '$9 ~ /^4/ { n++ } END { print n_0 }' "$logfile")
-s5=(awk '$9 ~ /^5/ { n++ } END { print n_0 }' "$logfile")
+print_totals() {
+    local total unique
+    total=$(wc -l < "$logfile")
+    unique=$(awk '{ print $1 }' "$logfile" | sort -u | wc -l)
 
+    echo "Total requests: $total"
+    echo "Unique visitors: $unique"
+}
 
-awk '{ print $7 }' "$logfile" | sort | uniq -c | sort -rn | head -5
+print_status() {
+    local s2 s3 s4 s5
+    s2=$(awk '$9 ~ /^2/ { n++ } END { print n_0 }' "$logfile")
+    s3=$(awk '$9 ~ /^3/ { n++ } END { print n_0 }' "$logfile")
+    s4=$(awk '$9 ~ /^4/ { n++ } END { print n_0 }' "$logfile")
+    s5=$(awk '$9 ~ /^5/ { n++ } END { print n_0 }' "$logfile")
+    echo "2 / 3:  $s2 / $s3"
+    echo "4 / 5 : $s4 / $s5"
+}
 
-mb=$(awk '{ sum += $10} END { printf "%.1f", sum / 1048576 }' "$logfile")
+print_data_sent() {
+    local mb
+    mb=$(awk '{ sum += $10} END { printf "%.1f", sum / 1048576 }' "$logfile")
+    echo "data sent: $mb MB"
+}
+
+print_top_pages() {
+    echo "Top 5 pages"
+    awk '{ print $7 }' "$logfile" | sort | uniq -c | sort -rn | head -5
+}
+
+print_top_ips() {
+    echo "Top 5 IP addresses"
+    awk '{ print $1 }' "$logfile" | sort | uniq -c | sort -rn | head -5
+}
+
+print_top_404() {
+    echo "Top five broken links (404)"
+    awk '$9 == 404 { print $7 }' "$logfile" | sort | uniq -c | sort -rn | head -5
+}
+
+print_header
+print_totals
+print_status
+print_data_sent
+print_top_pages
+print_top_ips
+print_top_404
