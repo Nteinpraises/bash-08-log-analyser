@@ -22,3 +22,6 @@ s2=(awk '$9 ~ /^2/ { n++ } END { print n_0 }' "$logfile")
 s3=(awk '$9 ~ /^3/ { n++ } END { print n_0 }' "$logfile")
 s4=(awk '$9 ~ /^4/ { n++ } END { print n_0 }' "$logfile")
 s5=(awk '$9 ~ /^5/ { n++ } END { print n_0 }' "$logfile")
+
+
+awk '{ print $7 }' "$logfile" | sort | uniq -c | sort -rn | head -5
