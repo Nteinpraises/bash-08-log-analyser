@@ -12,7 +12,7 @@ if [[ ! -f "$logfile" || ! -r "$logfile" ]]; then
     exit 1
 fi
 
-if [[ ! -f "$logfile" || ! -r "$logfile" ]]; then
+if [[ ! -s "$logfile" || ! -r "$logfile" ]]; then
     echo "No data: '$logfile' is empty"
     exit 0
 fi
@@ -38,8 +38,8 @@ print_status() {
     s3=$(awk '$9 ~ /^3/ { n++ } END { print n_0 }' "$logfile")
     s4=$(awk '$9 ~ /^4/ { n++ } END { print n_0 }' "$logfile")
     s5=$(awk '$9 ~ /^5/ { n++ } END { print n_0 }' "$logfile")
-    echo "2 / 3:  $s2 / $s3"
-    echo "4 / 5 : $s4 / $s5"
+    echo "2xx / 3xx :  $s2 / $s3"
+    echo "4xx / 5xx : $s4 / $s5"
 }
 
 print_data_sent() {
